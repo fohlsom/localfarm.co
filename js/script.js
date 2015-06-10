@@ -1,4 +1,5 @@
 function initialize() {
+
   var mapOptions = {
     center: new google.maps.LatLng(37.6052668,-122.2342566),
     zoom: 10,
@@ -16,9 +17,7 @@ function initialize() {
   var input = /** @type {HTMLInputElement} */(
       document.getElementById('pac-input'));
 
-  var types = document.getElementById('type-selector');
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-  // map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
 
   var autocomplete = new google.maps.places.Autocomplete(input, options);
   autocomplete.bindTo('bounds', map);
@@ -67,20 +66,6 @@ function initialize() {
     infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
     infowindow.open(map, marker);
   });
-
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
-  function setupClickListener(id, types) {
-    var radioButton = document.getElementById(id);
-    google.maps.event.addDomListener(radioButton, 'click', function() {
-      autocomplete.setTypes(types);
-    });
-  }
-
-  setupClickListener('changetype-all', []);
-  setupClickListener('changetype-address', ['address']);
-  setupClickListener('changetype-establishment', ['establishment']);
-  setupClickListener('changetype-geocode', ['geocode']);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
