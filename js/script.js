@@ -62,7 +62,10 @@ function initialize() {
         (place.address_components[2] && place.address_components[2].short_name || '')
       ].join(' ');
     }
-
+    console.log(place.name);
+    console.log(place.geometry.location);
+    console.log('lat: ' + place.geometry.location["A"]);
+    console.log('lng: ' + place.geometry.location["F"]);
     infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
     infowindow.open(map, marker);
   });
