@@ -1,4 +1,8 @@
+var geocoder;
+
 function initialize() {
+
+  geocoder = new google.maps.Geocoder();
 
   var mapOptions = {
     center: new google.maps.LatLng(37.6052668,-122.2342566),
@@ -62,12 +66,33 @@ function initialize() {
         (place.address_components[2] && place.address_components[2].short_name || '')
       ].join(' ');
     }
-    console.log(place.name);
-    console.log(place.geometry.location);
-    console.log('lat: ' + place.geometry.location["A"]);
-    console.log('lng: ' + place.geometry.location["F"]);
+
+    var lat = place.geometry.location["A"];
+    var lng = place.geometry.location["F"];
+    var latlng = lat + ", " + lng;
+    console.log(lat + ", " + lng);
+    codeLatLng(latlng);
     infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
     infowindow.open(map, marker);
+  });
+}
+
+function codeLatLng(latlng) {
+  var input = latlng;
+  var latlngStr = input.split(',', 2);
+  var lat = parseFloat(latlngStr[0]);
+  var lng = parseFloat(latlngStr[1]);
+  var latlng = new google.maps.LatLng(lat, lng);
+  geocoder.geocode({'latLng': latlng}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      if (results[1]) {
+        console.log("Success: " + (results[0].address_components[7].short_name));
+      } else {
+        alert('No results found');
+      }
+    } else {
+      alert('Geocoder failed due to: ' + status);
+    }
   });
 }
 
