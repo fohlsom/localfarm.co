@@ -37,12 +37,14 @@ function initialize() {
     marker.setVisible(false);
     var place = autocomplete.getPlace();
     if (!place.geometry) {
-      window.alert("Autocomplete's returned place contains no geometry");
+      console.log("Fel");
+      $( ".controls" ).toggleClass("controls-error");
       return;
     }
 
     // If the place has a geometry, then present it on a map.
     if (place.geometry.viewport) {
+      $( ".controls" ).toggleClass("controls-error");
       map.fitBounds(place.geometry.viewport);
     } else {
       map.setCenter(place.geometry.location);
@@ -85,8 +87,10 @@ function codeLatLng(latlng) {
   var latlng = new google.maps.LatLng(lat, lng);
   geocoder.geocode({'latLng': latlng}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
-      if (results[1]) {
-        console.log("Success: " + (results[0].address_components[7].short_name));
+      if (results[0]) {
+        var result_len = results[0].address_components.length;
+        console.log(result_len);
+        console.log("Success: " + (results[0].address_components[result_len - 1].short_name));
       } else {
         alert('No results found');
       }
