@@ -88,9 +88,14 @@ function codeLatLng(latlng) {
   geocoder.geocode({'latLng': latlng}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       if (results[0]) {
-        var result_len = results[0].address_components.length;
-        console.log(result_len);
-        console.log("Success: " + (results[0].address_components[result_len - 1].short_name));
+        var filterZip = results[1].address_components.filter(function(e){
+          return (e.types[0] === 'postal_code');
+        });
+        // console.log(k);
+        console.log(filterZip[0].short_name);
+        // var result_len = results[1].address_components.length;
+        // console.log(result_len);
+        // console.log("Success: " + (results[1].address_components[result_len - 1].short_name));
       } else {
         alert('No results found');
       }
