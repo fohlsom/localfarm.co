@@ -36,6 +36,9 @@ function initialize() {
     infowindow.close();
     marker.setVisible(false);
     var place = autocomplete.getPlace();
+    // We remove the error class for proper results. 
+    $( "input" ).removeClass("controls-error");
+    // We add the error class for proper results. 
     if (!place.geometry) {
       console.log("Fel");
       $( ".controls" ).toggleClass("controls-error");
@@ -44,7 +47,6 @@ function initialize() {
 
     // If the place has a geometry, then present it on a map.
     if (place.geometry.viewport) {
-      $( ".controls" ).toggleClass("controls-error");
       map.fitBounds(place.geometry.viewport);
     } else {
       map.setCenter(place.geometry.location);
@@ -73,6 +75,8 @@ function initialize() {
     var lng = place.geometry.location["F"];
     var latlng = lat + ", " + lng;
     console.log(lat + ", " + lng);
+    
+    // We call the codeLatLng function to get the zip code from the 
     codeLatLng(latlng);
     infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
     infowindow.open(map, marker);
@@ -80,29 +84,28 @@ function initialize() {
 }
 
 function codeLatLng(latlng) {
-  var input = latlng;
-  var latlngStr = input.split(',', 2);
+  var zipCode;
+  var latlngStr = latlng.split(',', 2);
   var lat = parseFloat(latlngStr[0]);
   var lng = parseFloat(latlngStr[1]);
-  var latlng = new google.maps.LatLng(lat, lng);
+  latlng = new google.maps.LatLng(lat, lng);
   geocoder.geocode({'latLng': latlng}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       if (results[0]) {
-        var filterZip = results[1].address_components.filter(function(e){
+        var filterZip = results[0].address_components.filter(function(e){
           return (e.types[0] === 'postal_code');
         });
-        // console.log(k);
-        console.log(filterZip[0].short_name);
-        // var result_len = results[1].address_components.length;
-        // console.log(result_len);
-        // console.log("Success: " + (results[1].address_components[result_len - 1].short_name));
+        zipCode = filterZip[0].short_name;
+        console.log("Zip code is: " + zipCode);
       } else {
-        alert('No results found');
+        console.log('No results found');
       }
     } else {
-      alert('Geocoder failed due to: ' + status);
+      console.log('Geocoder failed due to: ' + status);
     }
   });
 }
+
+
 
 google.maps.event.addDomListener(window, 'load', initialize);
