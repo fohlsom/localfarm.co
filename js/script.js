@@ -1,4 +1,7 @@
 var geocoder;
+var map;
+var marker;
+var place;
 
 function initialize() {
 
@@ -15,7 +18,7 @@ function initialize() {
     componentRestrictions: {country: 'us'}
   };
 
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
+  map = new google.maps.Map(document.getElementById('map-canvas'),
     mapOptions);
 
   var input = /** @type {HTMLInputElement} */(
@@ -27,15 +30,16 @@ function initialize() {
   autocomplete.bindTo('bounds', map);
 
   var infowindow = new google.maps.InfoWindow();
-  var marker = new google.maps.Marker({
+  marker = new google.maps.Marker({
     map: map,
     anchorPoint: new google.maps.Point(0, -29)
   });
 
+
   google.maps.event.addListener(autocomplete, 'place_changed', function() {
     infowindow.close();
     marker.setVisible(false);
-    var place = autocomplete.getPlace();
+    place = autocomplete.getPlace();
     // We remove the error class for proper results. 
     $( "input" ).removeClass("controls-error");
     // We add the error class for proper results. 
@@ -57,11 +61,12 @@ function initialize() {
       size: new google.maps.Size(71, 71),
       origin: new google.maps.Point(0, 0),
       anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(35, 35)
+      scaledSize: new google.maps.Size(35, 35),
+      position: new google.maps.LatLng(lat,lng)
     }));
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
-
+    
     var address = '';
     if (place.address_components) {
       address = [
@@ -76,11 +81,35 @@ function initialize() {
     var latlng = lat + ", " + lng;
     console.log(lat + ", " + lng);
     
+    placeMarkers(lat,lng);
+
     // We call the codeLatLng function to get the zip code from the 
     codeLatLng(latlng);
     infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
     infowindow.open(map, marker);
   });
+}
+
+function placeMarkers(lat, lng) {
+
+  lat = lat * 1.001
+  lng = lng * 1.001
+
+  var markerPosition = new google.maps.LatLng(lat, lng);
+
+  console.log("hander detta?")
+
+  var marker1 = new google.maps.Marker({
+    position: markerPosition,
+    title:"Hello World!"
+  });
+
+  // To add the marker to the map, call setMap();
+  marker1.setMap(map);
+  console.log("marker lat: " + lat);
+  console.log("marker lng: " + lng);
+
+
 }
 
 function codeLatLng(latlng) {
