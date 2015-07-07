@@ -1,7 +1,8 @@
 var geocoder;
 var map;
 var marker;
-var place;
+var markers = [];
+
 
 function initialize() {
 
@@ -56,14 +57,7 @@ function initialize() {
       map.setCenter(place.geometry.location);
       map.setZoom(17);  // Why 17? Because it looks good.
     }
-    marker.setIcon(/** @type {google.maps.Icon} */({
-      url: place.icon,
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(35, 35),
-      position: new google.maps.LatLng(lat,lng)
-    }));
+
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
     
@@ -79,9 +73,11 @@ function initialize() {
     var lat = place.geometry.location["A"];
     var lng = place.geometry.location["F"];
     var latlng = lat + ", " + lng;
-    console.log(lat + ", " + lng);
+
     
-    placeMarkers(lat,lng);
+    clearMarkers(markers);
+    markers = placeMarkers(lat,lng, markers);
+
 
     // We call the codeLatLng function to get the zip code from the 
     codeLatLng(latlng);
@@ -90,26 +86,37 @@ function initialize() {
   });
 }
 
-function placeMarkers(lat, lng) {
+function clearMarkers(){
 
-  lat = lat * 1.001
-  lng = lng * 1.001
+  for (var i = 0; i < markers.length; i++){
+    markers[i].setMap(null);
+  }
+  markers = [];
+}
 
-  var markerPosition = new google.maps.LatLng(lat, lng);
+function placeMarkers(lat, lng, markers) {
 
-  console.log("hander detta?")
+  var marketList = [
+    ['Market Divis', lat * 1.0001, lng * 1.0001],
+    ['Market Kongo', lat * 1.00015, lng * 1.00015],
+    ['Market Bongo', lat * 1.00017, lng * 1.00017],
+    ['Market China', lat * 1.00019, lng * 1.00019],
+    ['Market Indo', lat * 1.00021, lng * 1.00021]
+  ];
 
-  var marker1 = new google.maps.Marker({
-    position: markerPosition,
-    title:"Hello World!"
-  });
+  for (var i = 0; i < marketList.length; i++) {
+    var market = marketList[i];
+    var marketLatLng = new google.maps.LatLng(market[1], market[2]);
+    var marker = new google.maps.Marker({
+        position: marketLatLng,
+        map: map,
+        title: market[0]
+    });
+    markers.push(marker);
+  }
+  console.log(markers);
 
-  // To add the marker to the map, call setMap();
-  marker1.setMap(map);
-  console.log("marker lat: " + lat);
-  console.log("marker lng: " + lng);
-
-
+  return markers;
 }
 
 function codeLatLng(latlng) {
