@@ -70,19 +70,24 @@ google.maps.event.addListener(autocomplete, 'place_changed', function() {
     var lng = place.geometry.location["F"];
     var latlng = lat + ", " + lng;
 
+    console.log(lat + ", " + lng);
+
 
     clearMarkers(markers);
     markers = placeMarkers(lat,lng, markers);
+    var count = getFarmersMarkets(lat,lng);
 
     // We call the codeLatLng function to get the zip code from the 
-    codeLatLng(latlng).then(function(zipCode){
-        console.log("Zip code returned is: " + zipCode);
-    }, function(err){
-        console.log("Not working", err);
-    });
-    
+    // codeLatLng(latlng).then(function(zipCode){
+    //     console.log("Zip code returned is: " + zipCode);
+    // }, function(err){
+    //     console.log("Not working", err);
+    // });
 
-    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+        
+
+    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address +
+     '<br>' + count);
     infowindow.open(map, marker);
 });
 }
@@ -120,33 +125,92 @@ console.log(markers);
 return markers;
 }
 
-function codeLatLng(latlng) {
+// function codeLatLng(latlng) {
 
-    var deferred = $.Deferred(),
-        geocoder = new google.maps.Geocoder();
+//     var deferred = $.Deferred(),
+//         geocoder = new google.maps.Geocoder();
 
-    var latlngStr = latlng.split(',', 2);
-    var lat = parseFloat(latlngStr[0]);
-    var lng = parseFloat(latlngStr[1]);
-    latlng = new google.maps.LatLng(lat, lng);
+//     var latlngStr = latlng.split(',', 2);
+//     var lat = parseFloat(latlngStr[0]);
+//     var lng = parseFloat(latlngStr[1]);
+//     latlng = new google.maps.LatLng(lat, lng);
 
-    geocoder.geocode({'latLng': latlng}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            if (results[0]) {
-                filterZip = results[0].address_components.filter(function(e){
-                    return (e.types[0] === 'postal_code');
-                });
-                console.log("Zip code in function: " + filterZip[0].short_name)
-                deferred.resolve(filterZip[0].short_name);
-            } else {
-                deferred.reject(console.log('No results found'));
-            }
-        } else {
-            deferred.reject(console.log('Geocoder failed due to: ' + status));
+//     geocoder.geocode({'latLng': latlng}, function(results, status) {
+//         if (status == google.maps.GeocoderStatus.OK) {
+//             if (results[0]) {
+//                 filterZip = results[0].address_components.filter(function(e){
+//                     return (e.types[0] === 'postal_code');
+//                 });
+//                 console.log("Zip code in function: " + filterZip[0].short_name)
+//                 deferred.resolve(filterZip[0].short_name);
+//             } else {
+//                 deferred.reject(console.log('No results found'));
+//             }
+//         } else {
+//             deferred.reject(console.log('Geocoder failed due to: ' + status));
+//         }
+//     });
+//     return deferred.promise();
+// }
+
+// function getFarmersMarkets(zip) {
+//     $.ajax({
+//         url: wikiUrl,
+//         dataType: 'jsonp',
+//         success: function ( response ) {
+//             var articleList = response[1];
+//             console.log("wikipedia: " + articleList);
+
+//             for(var i = 0; i < articleList.length; i++){
+//                 var articleStr = articleList[i];
+//                 var url ='http;//en.wikipedia.org/wiki/' + articleStr;
+//                 $wikiElem.append('<li><a href="' + url + '">' +
+//                     articleStr + '</a></li>'); 
+//             }
+//             clearTimeout(wikiRequestSlow);
+//             clearTimeout(wikiRequestTimeout);
+
+//         }
+//     });
+// }
+
+
+function getFarmersMarkets(lat,lng) {
+    var count;
+    // or
+    // function getResults(lat, lng) {
+    $.ajax({
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        // submit a get request to the restful service zipSearch or locSearch.
+        // url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
+        // or
+        url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/locSearch?lat=" + lat + "&lng=" + lng,
+        dataType: 'jsonp',
+        success: function (response){
+            count = response.length;
+            console.log(response);
         }
     });
-    return deferred.promise();
+    return count;
+    // console.log(searchResultsHandler)
 }
+// //iterate through the JSON result object.
+// function searchResultsHandler(searchResults) {
+//     for (var key in searchresults) {
+//         alert(key);
+//         var results = searchresults[key];
+//         for (var i = 0; i < results.length; i++) {
+//             var result = results[i];
+//             for (var key in result) {
+//                 //only do an alert on the first search result
+//                 if (i == 0) {
+//                     alert(result[key]);
+//                 }
+//             }
+//         }
+//     }
+// }
 
 
 
