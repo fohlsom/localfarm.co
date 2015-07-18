@@ -75,19 +75,42 @@ google.maps.event.addListener(autocomplete, 'place_changed', function() {
 
     clearMarkers(markers);
     markers = placeMarkers(lat,lng, markers);
-    var count = getFarmersMarkets(lat,lng);
+    
 
-    // We call the codeLatLng function to get the zip code from the 
-    // codeLatLng(latlng).then(function(zipCode){
-    //     console.log("Zip code returned is: " + zipCode);
-    // }, function(err){
-    //     console.log("Not working", err);
-    // });
 
-        
 
-    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address +
-     '<br>' + count);
+    getFarmersMarkets(lat,lng).then(function (results) {
+        var fmList = [];
+
+        console.log("Farmersmarket list has been returned.");
+        console.log(results);
+
+        for (var key in results) {
+              fmList = results[key];
+              for (var i = 0; i < fmList.length; i++) {
+                  console.log(fmList[i].id + " " + fmList[i].marketname);
+            
+                  getDetails(fmList[i].id, fmList[i].marketname).then(function (results, id, marketname){
+                      console.log("Returned market details for " + id + " & " + marketname);
+                      for (var key in results) {
+                          var fmDList = results[key];
+                          console.log('Address: ' + fmDList['Address']);
+                          console.log('Googlelink: ' + fmDList['GoogleLink']);
+                      }
+                  }, function (error){
+                    console.log("No market details returned. ", error);
+                  });
+              }
+            }
+
+    }, function (error) {
+        console.error("Farmersmarket list not returned. Error: ", error);
+    });
+
+
+       
+
+    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
     infowindow.open(map, marker);
 });
 }
@@ -119,11 +142,63 @@ function placeMarkers(lat, lng, markers) {
         title: market[0]
     });
     markers.push(marker);
+  }
+  console.log(markers);
+  return markers;
 }
-console.log(markers);
 
-return markers;
+function getFarmersMarkets(lat,lng) {
+
+    var deferred = $.Deferred();
+
+    var fmList = [];
+    $.ajax({
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/locSearch?lat=" + lat + "&lng=" + lng,
+        dataType: 'jsonp',
+        }).then(function(data){
+            deferred.resolve(data);
+        });
+    return deferred.promise();
 }
+
+
+function getDetails(id, marketname) {
+
+    var deferred = $.Deferred();
+
+    $.ajax({
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        // submit a get request to the restful service mktDetail.
+        url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + id,
+        dataType: 'jsonp',
+        }).then(function(data){
+            deferred.resolve(data, id, marketname);
+        });
+    return deferred.promise();
+}
+//iterate through the JSON result object.
+// function detailResultHandler(detailresults) {
+//     for (var key in detailresults) {
+//         console.log('Market details: ' + key);
+//         var results = detailresults[key];
+//         console.log('Googlelink: ' + results['GoogleLink']);
+//     }
+// }
+
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+// We call the codeLatLng function to get the zip code from the 
+// codeLatLng(latlng).then(function(zipCode){
+//     console.log("Zip code returned is: " + zipCode);
+// }, function(err){
+//     console.log("Not working", err);
+// });
+
 
 // function codeLatLng(latlng) {
 
@@ -153,65 +228,14 @@ return markers;
 //     return deferred.promise();
 // }
 
-// function getFarmersMarkets(zip) {
-//     $.ajax({
-//         url: wikiUrl,
-//         dataType: 'jsonp',
-//         success: function ( response ) {
-//             var articleList = response[1];
-//             console.log("wikipedia: " + articleList);
-
-//             for(var i = 0; i < articleList.length; i++){
-//                 var articleStr = articleList[i];
-//                 var url ='http;//en.wikipedia.org/wiki/' + articleStr;
-//                 $wikiElem.append('<li><a href="' + url + '">' +
-//                     articleStr + '</a></li>'); 
-//             }
-//             clearTimeout(wikiRequestSlow);
-//             clearTimeout(wikiRequestTimeout);
-
-//         }
-//     });
-// }
 
 
-function getFarmersMarkets(lat,lng) {
-    var count;
-    // or
-    // function getResults(lat, lng) {
-    $.ajax({
-        type: "GET",
-        contentType: "application/json; charset=utf-8",
-        // submit a get request to the restful service zipSearch or locSearch.
-        // url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip,
-        // or
-        url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/locSearch?lat=" + lat + "&lng=" + lng,
-        dataType: 'jsonp',
-        success: function (response){
-            count = response.length;
-            console.log(response);
-        }
-    });
-    return count;
-    // console.log(searchResultsHandler)
-}
-// //iterate through the JSON result object.
-// function searchResultsHandler(searchResults) {
-//     for (var key in searchresults) {
-//         alert(key);
-//         var results = searchresults[key];
-//         for (var i = 0; i < results.length; i++) {
-//             var result = results[i];
-//             for (var key in result) {
-//                 //only do an alert on the first search result
-//                 if (i == 0) {
-//                     alert(result[key]);
-//                 }
-//             }
-//         }
-//     }
-// }
-
-
-
-google.maps.event.addDomListener(window, 'load', initialize);
+// Loopa igenom resultaten from market list
+            // for (var key in data) {
+            //   fmList = data[key];
+            //   for (var i = 0; i < fmList.length; i++) {
+            //       // var result = fmList[i];
+            //       console.log(fmList[i].id + " " + fmList[i].marketname);
+            //       // getDetails(result.id);
+            //   }
+            // }
