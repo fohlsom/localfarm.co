@@ -76,10 +76,10 @@ function initialize() {
         clearMarkers(markers);
         
 
-        var fmList = [];
+        
 
         getFarmersMarkets(lat,lng).then(function (results) {
-
+            var fmList = [];
             var fmMList = [];
 
             var marketListLength = results.results.length;
@@ -112,9 +112,9 @@ function initialize() {
                     
                     if (fmList.length === marketListLength){
 
-
+                        console.log(fmList);
                         
-                        markers = placeMarkers(lat,lng, markers);
+                        markers = placeMarkers(lat,lng, markers, fmList);
 
                     }
                     }, function (error){
@@ -138,23 +138,18 @@ function clearMarkers(){
     markers = [];
 }
 
-function placeMarkers(lat, lng, markers) {
-    var marketList = [
-    ['Market Divis', lat * 1.0001, lng * 1.0001],
-    ['Market Kongo', lat * 1.00015, lng * 1.00015],
-    ['Market Bongo', lat * 1.00017, lng * 1.00017],
-    ['Market China', lat * 1.00019, lng * 1.00019],
-    ['Market Indo', lat * 1.00021, lng * 1.00021]
-    ];
+function placeMarkers(lat, lng, markers, fmList) {
 
-    for (var i = 0; i < marketList.length; i++) {
+
+
+    for (var i = 0; i < fmList.length; i++) {
     
-        var market = marketList[i];
-        var marketLatLng = new google.maps.LatLng(market[1], market[2]);
+        var market = fmList[i];
+        var marketLatLng = new google.maps.LatLng(market['lat'], market['lng']);
         var marker = new google.maps.Marker({
             position: marketLatLng,
             map: map,
-            title: market[0]
+            title: market['Address']
         });
 
         markers.push(marker);
