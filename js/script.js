@@ -71,20 +71,20 @@ function initialize() {
         var lat = place.geometry.location["A"];
         var lng = place.geometry.location["F"];
         var latlng = lat + ", " + lng;
-        console.log(lat + ", " + lng);
+        console.log("Map is centered at: " + lat + ", " + lng + ".");
 
         clearMarkers(markers);
         
 
         var fmList = [];
-        
+
         getFarmersMarkets(lat,lng).then(function (results) {
 
             var fmMList = [];
 
-            console.log("Farmersmarket list has been returned.");
             var marketListLength = results.results.length;
-            console.log(marketListLength);
+
+            console.log("Farmersmarket list(" + marketListLength + ") has been returned.");
 
             for (var key in results) {
                 fmMList = results[key];
