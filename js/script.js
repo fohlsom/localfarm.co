@@ -98,12 +98,21 @@ function initialize() {
                             console.log('Id for this market is: ' + fmDList['id'] + ' and the name is ' + marketname);
                             console.log('Address: ' + fmDList['Address']);
                             console.log('Googlelink: ' + fmDList['GoogleLink']);
+
+                            var re = /(\d{1,2}[.]\d+)%[A-Z0-9]{2}%[A-Z0-9]{2}([-+]\d{1,3}[.]\d+)/;
+                            var latlng = fmDList['GoogleLink'].match(re);
+                            fmDList['lat'] = latlng[1];
+                            fmDList['lng'] = latlng[2];
+                            console.log('lat: ' + fmDList['lat']);
+                            console.log('lng: ' + fmDList['lng']);
                         }
                     fmList.push(fmDList);
                     
                     console.log(fmList.length);
                     
                     if (fmList.length === marketListLength){
+
+
                         
                         markers = placeMarkers(lat,lng, markers);
 
