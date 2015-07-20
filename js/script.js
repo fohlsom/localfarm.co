@@ -74,27 +74,40 @@ function initialize() {
         console.log(lat + ", " + lng);
 
         clearMarkers(markers);
-        markers = placeMarkers(lat,lng, markers);
+        
 
-
-
+        var fmList = [];
+        
         getFarmersMarkets(lat,lng).then(function (results) {
-            var fmList = [];
+
+            var fmMList = [];
+
             console.log("Farmersmarket list has been returned.");
-            console.log(results);
+            var marketListLength = results.results.length;
+            console.log(marketListLength);
 
             for (var key in results) {
-                fmList = results[key];
-                for (var i = 0; i < fmList.length; i++) {
-                    console.log(fmList[i].id + " " + fmList[i].marketname);
+                fmMList = results[key];
+                for (var i = 0; i < fmMList.length; i++) {
 
-                    getDetails(fmList[i].id, fmList[i].marketname).then(function (results, id, marketname){
-                        console.log("Returned market details for " + id + " & " + marketname);
+                    getDetails(fmMList[i].id, fmMList[i].marketname).then(function (results, id, marketname){
                         for (var key in results) {
                             var fmDList = results[key];
+                            fmDList['id'] = id;
+                            fmDList['marketname'] = marketname
+                            console.log('Id for this market is: ' + fmDList['id'] + ' and the name is ' + marketname);
                             console.log('Address: ' + fmDList['Address']);
                             console.log('Googlelink: ' + fmDList['GoogleLink']);
                         }
+                    fmList.push(fmDList);
+                    
+                    console.log(fmList.length);
+                    
+                    if (fmList.length === marketListLength){
+                        
+                        markers = placeMarkers(lat,lng, markers);
+
+                    }
                     }, function (error){
                         console.log("No market details returned. ", error);
                     });
@@ -145,7 +158,6 @@ function getFarmersMarkets(lat,lng) {
 
     var deferred = $.Deferred();
 
-    var fmList = [];
     $.ajax({
         type: "GET",
         contentType: "application/json; charset=utf-8",
