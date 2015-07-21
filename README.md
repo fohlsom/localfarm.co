@@ -7,3 +7,9 @@ I'm using the <a href="http://search.ams.usda.gov/farmersmarkets/v1/svcdesc.html
 I'm using <a href="https://developers.google.com/maps/documentation/javascript/">Google Maps Javascript API</a> for the map and geocoding requests.
 
 Demo available <a href="http://fohlsom.github.io/localfarm.co/">here</a>.
+
+
+TODO:
+1. Error handling for failing API requests
+2. Error handling for searching without selecting from the drop-down
+3. Update search when user drags map
