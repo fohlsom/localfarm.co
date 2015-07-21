@@ -73,10 +73,7 @@ function initialize() {
         var latlng = lat + ", " + lng;
         console.log("Map is centered at: " + lat + ", " + lng + ".");
 
-        clearMarkers(markers);
-        
-
-        
+        clearMarkers(markers);        
 
         getFarmersMarkets(lat,lng).then(function (results) {
             var fmList = [];
@@ -139,8 +136,6 @@ function clearMarkers(){
 }
 
 function placeMarkers(lat, lng, markers, fmList) {
-
-
 
     for (var i = 0; i < fmList.length; i++) {
     
