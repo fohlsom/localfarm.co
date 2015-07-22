@@ -2,6 +2,7 @@ var map;
 var marker;
 var markers = [];
 
+
 function initialize() {
 
     getWindowHeight();    
@@ -17,6 +18,8 @@ function initialize() {
         componentRestrictions: {country: 'us'}
     };
 
+    
+
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
 
@@ -27,7 +30,7 @@ function initialize() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
     var autocomplete = new google.maps.places.Autocomplete(input, options);
-    autocomplete.bindTo('bounds', map);
+    // autocomplete.bindTo('bounds', map);
 
     var infowindow = new google.maps.InfoWindow();
     marker = new google.maps.Marker({
@@ -130,6 +133,8 @@ function clearMarkers(){
 
 function placeMarkers(lat, lng, markers, fmList) {
 
+    var bounds = new google.maps.LatLngBounds();
+
     for (var i = 0; i < fmList.length; i++) {
     
         var market = fmList[i];
@@ -139,11 +144,18 @@ function placeMarkers(lat, lng, markers, fmList) {
             map: map,
             title: market['Address']
         });
+        bounds.extend(marker.getPosition());
 
         markers.push(marker);
     }
+    // map.setCenter(center); 
+    map.fitBounds(bounds);
+    // map.setCenter(bounds.getCenter());
+    
     console.log(markers);
+    
     return markers;
+
 }
 
 function getFarmersMarkets(lat,lng) {
