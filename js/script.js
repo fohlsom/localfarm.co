@@ -4,8 +4,7 @@ var markers = [];
 
 function initialize() {
 
-    getWindowHeight();
-    
+    getWindowHeight();    
 
     var mapOptions = {
         center: new google.maps.LatLng(37.6052668,-122.2342566),
@@ -72,6 +71,11 @@ function initialize() {
             var fmMList = [];
 
             var marketListLength = results.results.length;
+            console.log(results.results);
+            console.log(results.results[0].id);
+            if (results.results[0].id === "Error"){
+                $( "div.alert" ).toggle();
+            };
 
             console.log("Farmersmarket list(" + marketListLength + ") has been returned.");
 
@@ -98,11 +102,11 @@ function initialize() {
                     fmList.push(fmDList);
                     
                     console.log(fmList.length);
-                    
+
                     if (fmList.length === marketListLength){
 
                         console.log(fmList);
-                        
+                            
                         markers = placeMarkers(lat,lng, markers, fmList);
 
                     }
@@ -182,5 +186,9 @@ function getWindowHeight() {
         $('#map-canvas').css('height', (h - offsetTop));
     }).resize();
 }
+
+
+
+
 
 google.maps.event.addDomListener(window, 'load', initialize);

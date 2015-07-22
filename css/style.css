@@ -4,7 +4,7 @@
       html, body, #map-canvas {
         height: 100%;
         margin: 0px;
-        padding: 0px
+        padding: 0px;
       }
       .controls {
         margin-top: 16px;
@@ -12,7 +12,7 @@
         border-radius: 2px 0 0 2px;
         box-sizing: border-box;
         -moz-box-sizing: border-box;
-        height: 32px;
+        height: 45px;
         outline: none;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
       }
@@ -22,20 +22,20 @@
         border-radius: 2px 0 0 2px;
         box-sizing: border-box;
         -moz-box-sizing: border-box;
-        height: 32px;
+        height: 45px;
         outline: none;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
       }
 
       #pac-input {
         background-color: #fff;
-        font-family: Roboto;
-        font-size: 15px;
+        font-family: 'Rokkitt', serif;
+        font-size: 22px;
         font-weight: 300;
         margin-left: 12px;
         padding: 0 11px 0 13px;
         text-overflow: ellipsis;
-        width: 400px;
+        width: 30%;
       }
 
 /*      #pac-input:focus {
@@ -43,7 +43,7 @@
       }*/
 
       .pac-container {
-        font-family: Roboto;
+        font-family: 'Rokkitt', serif;
       }
 
       #type-selector {
@@ -53,9 +53,14 @@
       }
 
       #type-selector label {
-        font-family: Roboto;
-        font-size: 13px;
+        font-family: 'Rokkitt', serif;
+        font-size: 22px;
         font-weight: 300;
+      }
+
+      .alert {
+        margin-bottom: 0px;
+        position: absolute; top: 12px; left: 40%; z-index: 99; width: 50%;
       }
 
       /* Sticky footer styles
@@ -66,7 +71,7 @@ html {
 }
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  /*margin-bottom: 60px;*/
 }
 
 .container-fluid {
