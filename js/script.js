@@ -21,6 +21,7 @@ function initialize() {
     var input = /** @type {HTMLInputElement} */(
         document.getElementById('pac-input'));
 
+
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
     var autocomplete = new google.maps.places.Autocomplete(input, options);
@@ -45,6 +46,8 @@ function initialize() {
         if (!place.geometry) {
             console.log("Fel");
             $( ".controls" ).toggleClass("controls-error");
+            document.getElementById("pac-input").value = input.value + 
+            " Select an item from the drop-down";
             return;
         }
 
