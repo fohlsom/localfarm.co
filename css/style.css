@@ -1,3 +1,6 @@
+      /*@import url(http://fonts.googleapis.com/css?family=Source+Code+Pro);*/
+      /*@import url(http://fonts.googleapis.com/css?family=Special+Elite);*/
+      @import url(http://fonts.googleapis.com/css?family=Rokkitt:700);
       html, body, #map-canvas {
         height: 100%;
         margin: 0px;
@@ -54,3 +57,33 @@
         font-size: 13px;
         font-weight: 300;
       }
+
+      /* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+
+.container-fluid {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.footer {
+  padding-left: 15px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #26829B;
+  font-family: 'Rokkitt', serif;
+  color: #ffffff;
+}
+.footer p {
+  margin-top: 20px;
+}
