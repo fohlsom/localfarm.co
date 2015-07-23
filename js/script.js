@@ -1,7 +1,7 @@
 var map;
 var marker;
 var markers = [];
-
+var infowindow = null;
 
 function initialize() {
 
@@ -18,21 +18,16 @@ function initialize() {
         componentRestrictions: {country: 'us'}
     };
 
-    
-
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
 
     var input = /** @type {HTMLInputElement} */(
         document.getElementById('pac-input'));
 
-
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
     var autocomplete = new google.maps.places.Autocomplete(input, options);
-    // autocomplete.bindTo('bounds', map);
 
-    var infowindow = new google.maps.InfoWindow();
     marker = new google.maps.Marker({
         map: map,
         anchorPoint: new google.maps.Point(0, -29)
@@ -54,14 +49,6 @@ function initialize() {
             return;
         }
 
-        // If the place has a geometry, then present it on a map.
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-        } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);  // Why 17? Because it looks good.
-        }
-
         var lat = place.geometry.location["A"];
         var lng = place.geometry.location["F"];
         var latlng = lat + ", " + lng;
@@ -74,8 +61,7 @@ function initialize() {
             var fmMList = [];
 
             var marketListLength = results.results.length;
-            console.log(results.results);
-            console.log(results.results[0].id);
+
             if (results.results[0].id === "Error"){
                 $( "div.alert" ).toggle();
             };
@@ -91,25 +77,17 @@ function initialize() {
                             var fmDList = results[key];
                             fmDList['id'] = id;
                             fmDList['marketname'] = marketname
-                            console.log('Id for this market is: ' + fmDList['id'] + ' and the name is ' + marketname);
-                            console.log('Address: ' + fmDList['Address']);
-                            console.log('Googlelink: ' + fmDList['GoogleLink']);
 
                             var re = /(\d{1,2}[.]\d+)%[A-Z0-9]{2}%[A-Z0-9]{2}([-+]\d{1,3}[.]\d+)/;
                             var latlng = fmDList['GoogleLink'].match(re);
                             fmDList['lat'] = latlng[1];
                             fmDList['lng'] = latlng[2];
-                            console.log('lat: ' + fmDList['lat']);
-                            console.log('lng: ' + fmDList['lng']);
                         }
+
                     fmList.push(fmDList);
-                    
-                    console.log(fmList.length);
 
                     if (fmList.length === marketListLength){
 
-                        console.log(fmList);
-                            
                         markers = placeMarkers(lat,lng, markers, fmList);
 
                     }
@@ -122,7 +100,11 @@ function initialize() {
             console.error("Farmersmarket list not returned. Error: ", error);
         });
     });
+
+
 }
+
+
 
 function clearMarkers(){
     for (var i = 0; i < markers.length; i++){
@@ -133,26 +115,41 @@ function clearMarkers(){
 
 function placeMarkers(lat, lng, markers, fmList) {
 
+    console.log(fmList);
     var bounds = new google.maps.LatLngBounds();
 
     for (var i = 0; i < fmList.length; i++) {
-    
+        
         var market = fmList[i];
         var marketLatLng = new google.maps.LatLng(market['lat'], market['lng']);
+        var contentString = '<ul><li>' + market['Address'] + '</li>' +
+                            '<li>' + market['Products'] + '</li>' +
+                            '<li>' + market['Schedule'] + '</li></ul>'
         var marker = new google.maps.Marker({
             position: marketLatLng,
             map: map,
-            title: market['Address']
+            title: market['marketname'],
+            content: contentString
         });
+
+
+        infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            // where I have added content to the marker object.
+            infowindow.setContent(this.content);
+            infowindow.open(map, this);
+        });
+
         bounds.extend(marker.getPosition());
 
         markers.push(marker);
     }
-    // map.setCenter(center); 
+
     map.fitBounds(bounds);
-    // map.setCenter(bounds.getCenter());
-    
-    console.log(markers);
+    map.setCenter(bounds.getCenter());
     
     return markers;
 
