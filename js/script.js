@@ -119,6 +119,8 @@ function placeMarkers(lat, lng, markers, fmList) {
     var bounds = new google.maps.LatLngBounds();
 
     for (var i = 0; i < fmList.length; i++) {
+
+        console.log(market);
         
         var market = fmList[i];
         if (market['marketname'] == '') {
@@ -130,14 +132,14 @@ function placeMarkers(lat, lng, markers, fmList) {
         if (market['Products'] == '') {
             market['Products'] = "Product information missing."
         }
-        if (market['Schedule'] == '') {
+        if (market['Schedule'] == ' <br> <br> <br> ') {
             market['Schedule'] = "Schedule missing."
         }        
         var marketLatLng = new google.maps.LatLng(market['lat'], market['lng']);
         var contentString = '<h4>' + market['marketname'] + '</h4>' +
-                            '<ul class="list-unstyled"><li>' + market['Address'] + '</li>' +
-                            '<li>' + market['Products'] + '</li>' +
-                            '<li>' + market['Schedule'] + '</li></ul>'
+                            '<dl class="dl-horizontal"><dt>Address</dt><dd>' + market['Address'] + '</dd>' +
+                            '<dt>Products</dt><dd>' + market['Products'] + '</dd>' +
+                            '<dt>Schedule</dt><dd>' + market['Schedule'] + '</dd></dl>'
         var marker = new google.maps.Marker({
             position: marketLatLng,
             map: map,
