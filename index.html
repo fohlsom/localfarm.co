@@ -18,23 +18,24 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8">
-                <div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span></button> 
-                    <p>
-                        <strong>Oops!</strong> This is taking longer than usual. The USDA API seems a bit tired at the moment.
-                    </p>
-                    <p>
-                         Refresh and try again. If that doesn't work please try again later. Apologies. 
-                    </p>
+                <div class="delayedAPI">
+<!--                     <div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span></button> 
+                        <p>
+                            <strong>Oops!</strong> This is taking longer than usual. The USDA API seems a bit tired at the moment.
+                        </p>
+                        <p>
+                             Refresh and try again. If that doesn't work please try again later. Apologies. 
+                        </p>
+                    </div> -->
                 </div>
-            
                 <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
                 <div id="map-canvas"></div>
             </div>
             <div class="col-md-4">
                 <div>
-                    <ul id="marker_list"></ul>
+                    <ul id="marker_list" class="list-group"></ul>
                 </div>
             </div>
         </div>

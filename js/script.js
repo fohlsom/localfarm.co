@@ -2,6 +2,7 @@ var map;
 var marker;
 var markers = [];
 var infowindow = null;
+var timer;
 
 function initialize() {
 
@@ -54,7 +55,13 @@ function initialize() {
         var latlng = lat + ", " + lng;
         console.log("Map is centered at: " + lat + ", " + lng + ".");
 
-        clearMarkers(markers);        
+        clearMarkers(markers);
+        removeSideBar();
+
+        // delayedAPI();
+        
+
+        
 
         getFarmersMarkets(lat,lng).then(function (results) {
             var fmList = [];
@@ -100,14 +107,13 @@ function initialize() {
             console.error("Farmersmarket list not returned. Error: ", error);
         });
     });
-
-
 }
 
 function createMarkerButton(marker) {
     //Creates a sidebar button
     var ul = document.getElementById("marker_list");
     var li = document.createElement("li");
+    li.className = "list-group-item";
     var title = marker.getTitle();
     li.innerHTML = title;
     ul.appendChild(li);
@@ -126,14 +132,16 @@ function clearMarkers(){
     markers = [];
 }
 
+function removeSideBar(){
+    $( ".list-group-item" ).remove();
+}
+
 function placeMarkers(lat, lng, markers, fmList) {
 
     console.log(fmList);
     var bounds = new google.maps.LatLngBounds();
 
     for (var i = 0; i < fmList.length; i++) {
-
-        console.log(market);
         
         var market = fmList[i];
         if (market['marketname'] == '') {
@@ -226,7 +234,14 @@ function getWindowHeight() {
     }).resize();
 }
 
+function delayedAPI() {
+    timer = window.setTimeout(showAlert, 3000);
+};
 
+function showAlert() {
+
+    $( ".delayedAPI" ).append( $( "<div class='alert alert-danger alert-dismissible fade in' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><p><strong>Oops!</strong> This is taking longer than usual. The USDA API seems a bit tired at the moment.</p><p>Refresh and try again. If that doesn't work please try again later. Apologies. </p></div>"));
+}
 
 
 
