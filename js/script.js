@@ -104,6 +104,19 @@ function initialize() {
 
 }
 
+function createMarkerButton(marker) {
+    //Creates a sidebar button
+    var ul = document.getElementById("marker_list");
+    var li = document.createElement("li");
+    var title = marker.getTitle();
+    li.innerHTML = title;
+    ul.appendChild(li);
+
+    //Trigger a click event to marker when the button is clicked.
+    google.maps.event.addDomListener(li, "click", function(){
+        google.maps.event.trigger(marker, "click");
+    });
+}
 
 
 function clearMarkers(){
@@ -159,6 +172,8 @@ function placeMarkers(lat, lng, markers, fmList) {
         });
 
         bounds.extend(marker.getPosition());
+
+        createMarkerButton(marker);
 
         markers.push(marker);
     }
