@@ -60,7 +60,9 @@ function initialize() {
 
         // delayedAPI();
         
-
+        google.maps.event.addListener(map, "click", function(){
+            infowindow.close();
+        });
         
 
         getFarmersMarkets(lat,lng).then(function (results) {
@@ -110,19 +112,29 @@ function initialize() {
 }
 
 function createMarkerButton(marker) {
+
     //Creates a sidebar button
     var ul = document.getElementById("marker_list");
-    var li = document.createElement("li");
-    li.className = "list-group-item";
+    var a = document.createElement("a");
+    a.className = "list-group-item";
+    a.setAttribute("id", "list-item");
     var title = marker.getTitle();
-    li.innerHTML = title;
-    ul.appendChild(li);
+    a.innerHTML = title
+    ul.appendChild(a);
 
     //Trigger a click event to marker when the button is clicked.
-    google.maps.event.addDomListener(li, "click", function(){
+    google.maps.event.addDomListener(a, "click", function(){
         google.maps.event.trigger(marker, "click");
+        $('a.list-group-item.active').removeClass('active');
+        $(this).addClass('active');
     });
+
+
 }
+
+$(document).ready(function ($) {
+        $('#tabs').tab();
+    });
 
 
 function clearMarkers(){
@@ -178,6 +190,7 @@ function placeMarkers(lat, lng, markers, fmList) {
             infowindow.setContent(this.content);
             infowindow.open(map, this);
         });
+
 
         bounds.extend(marker.getPosition());
 
@@ -240,7 +253,14 @@ function delayedAPI() {
 
 function showAlert() {
 
-    $( ".delayedAPI" ).append( $( "<div class='alert alert-danger alert-dismissible fade in' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><p><strong>Oops!</strong> This is taking longer than usual. The USDA API seems a bit tired at the moment.</p><p>Refresh and try again. If that doesn't work please try again later. Apologies. </p></div>"));
+    $( ".delayedAPI" ).append( $( "<div class='alert alert-danger" + 
+        "alert-dismissible fade in' role='alert'><button type='button'" +
+        "class='close' data-dismiss='alert' aria-label='Close'>" +
+        "<span aria-hidden='true'>×</span></button><p><strong>Oops!</strong>" +
+         "This is taking longer than usual. The USDA API seems a bit tired at" +
+          "the moment.</p><p>Refresh and try again. If that doesn't work please" +
+           "try again later. Apologies. </p></div>"
+    ));
 }
 
 

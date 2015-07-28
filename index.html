@@ -18,24 +18,26 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8">
-                <div class="delayedAPI">
-<!--                     <div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">×</span></button> 
-                        <p>
-                            <strong>Oops!</strong> This is taking longer than usual. The USDA API seems a bit tired at the moment.
-                        </p>
-                        <p>
-                             Refresh and try again. If that doesn't work please try again later. Apologies. 
-                        </p>
-                    </div> -->
-                </div>
+                <div class="delayedAPI"></div>
                 <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
                 <div id="map-canvas"></div>
             </div>
-            <div class="col-md-4">
-                <div>
-                    <ul id="marker_list" class="list-group"></ul>
+            <div class="col-md-3">
+                <div id="content">   
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li class="active"><a href="#filters" data-toggle="tab">Filters</a></li>
+                        <li><a href="#results" data-toggle="tab">Results</a></li>
+                    </ul>
+                    <div id="my-tab-content" class="tab-content">
+                        <div class="tab-pane active" id="filters">
+                            <h1>Filters</h1>
+                            <p>red red red red red red</p>
+                        </div>
+                        <div class="tab-pane" id="results">
+                            <h1>Results</h1>
+                            <ul id="marker_list" class="list-group"></ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
