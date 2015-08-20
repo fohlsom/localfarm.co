@@ -50,15 +50,14 @@ function initialize() {
             return;
         }
 
-        var lat = place.geometry.location["A"];
-        var lng = place.geometry.location["F"];
+        console.log(place.geometry);
+        var lat = place.geometry.location["G"];
+        var lng = place.geometry.location["K"];
         var latlng = lat + ", " + lng;
         console.log("Map is centered at: " + lat + ", " + lng + ".");
 
         clearMarkers(markers);
         removeSideBar();
-
-        // delayedAPI();
         
         google.maps.event.addListener(map, "click", function(){
             infowindow.close();
