@@ -6,12 +6,13 @@ var timer;
 
 function initialize() {
 
-    getWindowHeight();    
+    getWindowHeight();
 
     var mapOptions = {
         center: new google.maps.LatLng(37.6052668,-122.2342566),
         zoom: 10,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false
     };
 
     var options = {
@@ -26,6 +27,9 @@ function initialize() {
         document.getElementById('pac-input'));
 
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    // var legend = document.getElementById('legend');
+    // map.controls[google.maps.ControlPosition.TOP_RIGHT].push(legend);
 
     var autocomplete = new google.maps.places.Autocomplete(input, options);
 
@@ -61,6 +65,7 @@ function initialize() {
         
         google.maps.event.addListener(map, "click", function(){
             infowindow.close();
+            $('a.list-group-item').removeClass('active');
         });
         
 
@@ -121,13 +126,20 @@ function createMarkerButton(marker) {
     a.innerHTML = title
     ul.appendChild(a);
 
+    highlightSideBar(a,marker);
+
+}
+
+function highlightSideBar(a,marker) {
+
     //Trigger a click event to marker when the button is clicked.
     google.maps.event.addDomListener(a, "click", function(){
         google.maps.event.trigger(marker, "click");
-        $('a.list-group-item.active').removeClass('active');
+        $('a.list-group-item').removeClass('active');
         $(this).addClass('active');
     });
 
+    console.log(a);
 
 }
 
@@ -184,16 +196,20 @@ function placeMarkers(lat, lng, markers, fmList) {
             content: contentString
         });
 
+        createMarkerButton(marker);
         google.maps.event.addListener(marker, 'click', function () {
             // where I have added content to the marker object.
             infowindow.setContent(this.content);
             infowindow.open(map, this);
+
+            
+
         });
 
 
         bounds.extend(marker.getPosition());
 
-        createMarkerButton(marker);
+        
 
         markers.push(marker);
     }
@@ -241,8 +257,10 @@ function getWindowHeight() {
     $(window).resize(function () {
         var h = $(window).height(),
         offsetTop = 60; // Calculate the top offset
+        offsetBottom = 130;
 
         $('#map-canvas').css('height', (h - offsetTop));
+        $('.tab-content').css('height', (h - offsetBottom));
     }).resize();
 }
 

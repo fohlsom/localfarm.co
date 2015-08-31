@@ -22,19 +22,47 @@
                 <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
                 <div id="map-canvas"></div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4 sidebar" id="sidebar">
                 <div id="content">   
-                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-                        <li class="active"><a href="#filters" data-toggle="tab">Filters</a></li>
-                        <li><a href="#results" data-toggle="tab">Results</a></li>
+                    <ul id="tabs" class="nav nav-pills" data-tabs="tabs">
+                        <li role="presentation" class="active">
+                            <a href="#filters" data-toggle="tab">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Filters</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#results" data-toggle="tab">
+                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Results</a>
+                        </li>
                     </ul>
                     <div id="my-tab-content" class="tab-content">
                         <div class="tab-pane active" id="filters">
-                            <h1>Filters</h1>
-                            <p>red red red red red red</p>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value=""> Bread
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value=""> Egg
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value=""> Platano
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value=""> Queso
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value=""> Milk
+                                </label>
+                            </div>
                         </div>
                         <div class="tab-pane" id="results">
-                            <h1>Results</h1>
                             <ul id="marker_list" class="list-group"></ul>
                         </div>
                     </div>
