@@ -41,6 +41,7 @@ function initialize() {
 
 
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        
         place = autocomplete.getPlace();
         
         // We remove the error class for proper results. 
@@ -54,6 +55,8 @@ function initialize() {
             $("input").attr("placeholder", "Select a location from the drop-down list.");
             return;
         }
+        
+
 
         console.log(place.geometry);
         var lat = place.geometry.location["H"];
@@ -62,7 +65,13 @@ function initialize() {
         console.log("Map is centered at: " + lat + ", " + lng + ".");
 
         clearMarkers(markers);
+        if ( $( "#marker_list_header" ).length ) {
+            // $( "#marker_list_header" ).hide();
+            $( "#marker_list_header" ).html(place.formatted_address);
+        }
         removeSideBar();
+
+        $('#pac-input').val('');
         
         google.maps.event.addListener(map, "click", function(){
             infowindow.close();

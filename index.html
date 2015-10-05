@@ -26,16 +26,20 @@
                 <div id="content">   
                     <ul id="tabs" class="nav nav-pills" data-tabs="tabs">
                         <li role="presentation" class="active">
+                            <a href="#results" data-toggle="tab">
+                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Farmers Markets</a>
+                        </li>
+                        <li role="presentation">
                             <a href="#filters" data-toggle="tab">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Filters</a>
                         </li>
-                        <li role="presentation">
-                            <a href="#results" data-toggle="tab">
-                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Results</a>
-                        </li>
                     </ul>
                     <div id="my-tab-content" class="tab-content">
-                        <div class="tab-pane active" id="filters">
+                        <div class="tab-pane active" id="results">
+                            <h4 id="marker_list_header">Try searching for markets either by city or zip code.</h4>  
+                            <ul id="marker_list" class="list-group"></ul>
+                        </div>
+                        <div class="tab-pane" id="filters">
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" id="bread" value="bread" checked> Bread
@@ -61,9 +65,6 @@
                                     <input type="checkbox" value=""> Milk
                                 </label>
                             </div>
-                        </div>
-                        <div class="tab-pane" id="results">
-                            <ul id="marker_list" class="list-group"></ul>
                         </div>
                     </div>
                 </div>
