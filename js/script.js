@@ -3,6 +3,7 @@ var marker;
 var markers = [];
 var infowindow = null;
 var timer;
+var error_message;
 
 function initialize() {
 
@@ -55,8 +56,8 @@ function initialize() {
         }
 
         console.log(place.geometry);
-        var lat = place.geometry.location["G"];
-        var lng = place.geometry.location["K"];
+        var lat = place.geometry.location["H"];
+        var lng = place.geometry.location["L"];
         var latlng = lat + ", " + lng;
         console.log("Map is centered at: " + lat + ", " + lng + ".");
 
@@ -76,7 +77,8 @@ function initialize() {
             var marketListLength = results.results.length;
 
             if (results.results[0].id === "Error"){
-                $( "div.alert" ).toggle();
+                error_message = "There is a problem with the USDA API at the moment. Please try again later.";
+                showAlert(error_message);
             };
 
             console.log("Farmersmarket list(" + marketListLength + ") has been returned.");
@@ -106,11 +108,16 @@ function initialize() {
                     }
                     }, function (error){
                         console.log("No market details returned. ", error);
+                        
+                        error_message = "No info about the farmers markets were returned. Strange...";
+                        showAlert(error_message);
                     });
                 }
             }
         }, function (error) {
             console.error("Farmersmarket list not returned. Error: ", error);
+            error_message = "No farmers markets were returned. Where do you live?";
+            showAlert(error_message);
         });
     });
 }
@@ -167,6 +174,7 @@ function placeMarkers(lat, lng, markers, fmList) {
     for (var i = 0; i < fmList.length; i++) {
         
         var market = fmList[i];
+
         if (market['marketname'] == '') {
             market['marketname'] = "Information missing."
         }
@@ -201,15 +209,9 @@ function placeMarkers(lat, lng, markers, fmList) {
             // where I have added content to the marker object.
             infowindow.setContent(this.content);
             infowindow.open(map, this);
-
-            
-
         });
 
-
         bounds.extend(marker.getPosition());
-
-        
 
         markers.push(marker);
     }
@@ -264,19 +266,13 @@ function getWindowHeight() {
     }).resize();
 }
 
-function delayedAPI() {
-    timer = window.setTimeout(showAlert, 3000);
-};
+function showAlert(error_message) {
 
-function showAlert() {
-
-    $( ".delayedAPI" ).append( $( "<div class='alert alert-danger" + 
+    $( ".error_message" ).append( $( "<div class='alert alert-warning " + 
         "alert-dismissible fade in' role='alert'><button type='button'" +
         "class='close' data-dismiss='alert' aria-label='Close'>" +
-        "<span aria-hidden='true'>×</span></button><p><strong>Oops!</strong>" +
-         "This is taking longer than usual. The USDA API seems a bit tired at" +
-          "the moment.</p><p>Refresh and try again. If that doesn't work please" +
-           "try again later. Apologies. </p></div>"
+        "<span aria-hidden='true'>×</span></button><p><strong>Oops! </strong>" +
+         error_message + "</p></div>"
     ));
 }
 
