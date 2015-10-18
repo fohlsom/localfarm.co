@@ -30,16 +30,12 @@ function initialize() {
 
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-    // var legend = document.getElementById('legend');
-    // map.controls[google.maps.ControlPosition.TOP_RIGHT].push(legend);
-
     var autocomplete = new google.maps.places.Autocomplete(input, options);
 
     marker = new google.maps.Marker({
         map: map,
         anchorPoint: new google.maps.Point(0, -29)
     });
-
 
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
         
@@ -57,30 +53,25 @@ function initialize() {
             return;
         }
         
-
-
         var lat = place.geometry.location.lat();
         var lng = place.geometry.location.lng();
         var latlng = lat + ", " + lng;
         console.log("Map is centered at: " + lat + ", " + lng + ".");
 
-        
-
         clearMarkers(markers);
-        if ( $( "#marker_list_header" ).length ) {
-            // $( "#marker_list_header" ).hide();
-            $( "#marker_list_header" ).html(place.formatted_address);
-        }
+
+        showMarkerListHeader();
+        
         recentSearches(place.formatted_address);
+        
         removeSideBar();
 
-        $('#pac-input').val('');
+        resetInputField()
         
         google.maps.event.addListener(map, "click", function(){
             infowindow.close();
             $('a.list-group-item').removeClass('active');
         });
-        
 
         getFarmersMarkets(lat,lng).then(function (results) {
             var fmList = [];
@@ -134,9 +125,8 @@ function initialize() {
     });
 }
 
-function createMarkerButton(marker) {
-
-    //Creates a sidebar button
+function createSidebarItem(marker) {
+    //Creates a sidebar item
     var ul = document.getElementById("marker_list");
     var a = document.createElement("a");
     a.className = "list-group-item";
@@ -144,25 +134,34 @@ function createMarkerButton(marker) {
     var title = marker.getTitle();
     a.innerHTML = title
     ul.appendChild(a);
-
     highlightSideBar(a,marker);
 
 }
 
-function highlightSideBar(a,marker) {
+function resetInputField() {
+    //Resets the input field after a search
+    $('#pac-input').val('');
+};
 
-    //Trigger a click event to marker when the button is clicked.
+function showMarkerListHeader (){
+    //Shows a header with the name of the location above the list of markets
+    if ( $( "#marker_list_header" ).length ) {
+        $( "#marker_list_header" ).html("Showing results for " + place.formatted_address);
+    }
+};
+
+function highlightSideBar(a,marker) {
+    //Trigger a click event to marker when the sidebar item is clicked
     google.maps.event.addDomListener(a, "click", function(){
         google.maps.event.trigger(marker, "click");
         $('a.list-group-item').removeClass('active');
         $(this).addClass('active');
     });
-
     console.log(a);
-
 }
 
 function recentSearches(search) {
+    //Populates the recent search list, shows last 10 searches
     if (recentSearchesList.length > 9){
         recentSearchesList.shift();
         recentSearchesList.push(search);
@@ -178,16 +177,30 @@ function recentSearches(search) {
 }
 
 
-
-
+function filterMarkers (category) {
+    //Not implemented yet
+    for (i = 0; i < markers.length; i++) {
+        marker = markers[i];
+        // If is same category or category not picked
+        if (marker.category == category || category.length === 0) {
+            marker.setVisible(true);
+        }
+        // Categories don't match 
+        else {
+            marker.setVisible(false);
+        }
+    }
+}
 
 
 $(document).ready(function ($) {
+    //Shows the result, filter and recent search tabs in the UI. 
         $('#tabs').tab();
     });
 
 
 function clearMarkers(){
+    //Clears the markers array
     for (var i = 0; i < markers.length; i++){
         markers[i].setMap(null);
     }
@@ -195,18 +208,16 @@ function clearMarkers(){
 }
 
 function removeSideBar(){
+    //Removes the sidebar
     $( ".list-group-item" ).remove();
 }
 
 function placeMarkers(lat, lng, markers, fmList) {
-
+    //Places the markers on the map
     console.log(fmList);
     var bounds = new google.maps.LatLngBounds();
-
     for (var i = 0; i < fmList.length; i++) {
-        
         var market = fmList[i];
-
         if (market['marketname'] == '') {
             market['marketname'] = "Information missing."
         }
@@ -236,7 +247,7 @@ function placeMarkers(lat, lng, markers, fmList) {
             content: contentString
         });
 
-        createMarkerButton(marker);
+        createSidebarItem(marker);
         google.maps.event.addListener(marker, 'click', function () {
             // where I have added content to the marker object.
             infowindow.setContent(this.content);
@@ -256,7 +267,7 @@ function placeMarkers(lat, lng, markers, fmList) {
 }
 
 function getFarmersMarkets(lat,lng) {
-
+    //Get list of farmers market from the USDA API.
     var deferred = $.Deferred();
 
     $.ajax({
@@ -272,7 +283,7 @@ function getFarmersMarkets(lat,lng) {
 
 
 function getDetails(id, marketname) {
-
+    //Gets the details for each id returned in the getFarmersMarket function.
     var deferred = $.Deferred();
 
     $.ajax({
@@ -288,6 +299,7 @@ function getDetails(id, marketname) {
 }
 
 function getWindowHeight() {
+    //Gets the users widow height, used for dynamically setting the map height
     $(window).resize(function () {
         var h = $(window).height(),
         offsetTop = 60; // Calculate the top offset
@@ -299,7 +311,7 @@ function getWindowHeight() {
 }
 
 function showAlert(error_message) {
-
+    //Shows alerts if there is an error
     $( ".error_message" ).append( $( "<div class='alert alert-warning " + 
         "alert-dismissible fade in' role='alert'><button type='button'" +
         "class='close' data-dismiss='alert' aria-label='Close'>" +
@@ -307,7 +319,5 @@ function showAlert(error_message) {
          error_message + "</p></div>"
     ));
 }
-
-
 
 google.maps.event.addDomListener(window, 'load', initialize);
