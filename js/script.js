@@ -4,6 +4,7 @@ var markers = [];
 var infowindow = null;
 var timer;
 var error_message;
+var recentSearchesList = [];
 
 function initialize() {
 
@@ -58,17 +59,19 @@ function initialize() {
         
 
 
-        console.log(place.geometry);
-        var lat = place.geometry.location["H"];
-        var lng = place.geometry.location["L"];
+        var lat = place.geometry.location.lat();
+        var lng = place.geometry.location.lng();
         var latlng = lat + ", " + lng;
         console.log("Map is centered at: " + lat + ", " + lng + ".");
+
+        
 
         clearMarkers(markers);
         if ( $( "#marker_list_header" ).length ) {
             // $( "#marker_list_header" ).hide();
             $( "#marker_list_header" ).html(place.formatted_address);
         }
+        recentSearches(place.formatted_address);
         removeSideBar();
 
         $('#pac-input').val('');
@@ -157,6 +160,16 @@ function highlightSideBar(a,marker) {
 
     console.log(a);
 
+}
+
+function recentSearches(search) {
+    if (recentSearchesList.length > 9){
+        recentSearchesList.shift();
+        recentSearchesList.push(search);
+    } else {
+        recentSearchesList.push(search);
+    };    
+    document.getElementById("recent_searches_list").innerHTML = recentSearchesList;
 }
 
 $(document).ready(function ($) {
