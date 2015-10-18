@@ -168,9 +168,19 @@ function recentSearches(search) {
         recentSearchesList.push(search);
     } else {
         recentSearchesList.push(search);
-    };    
-    document.getElementById("recent_searches_list").innerHTML = recentSearchesList;
+    };
+    var htmlString = "";
+    for (var i = 0; i < recentSearchesList.length; i++) {
+        htmlString += "<li>" + recentSearchesList[i] + "</li>";
+    };
+    $("#recent_searches_list").html(htmlString);
+    console.log(recentSearchesList);
 }
+
+
+
+
+
 
 $(document).ready(function ($) {
         $('#tabs').tab();
