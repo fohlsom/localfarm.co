@@ -106,7 +106,7 @@ function initialize() {
 
                     if (fmList.length === marketListLength){
 
-                        markers = placeMarkers(lat,lng, markers, fmList);
+                        placeMarkers(lat,lng, markers, fmList);
 
                     }
                     }, function (error){
@@ -147,6 +147,7 @@ function showMarkerListHeader (){
     //Shows a header with the name of the location above the list of markets
     if ( $( "#marker_list_header" ).length ) {
         $( "#marker_list_header" ).html("Showing results for " + place.formatted_address);
+        $( "#product_filter" ).html("<h5>Looking for something special? Use the filter.</h5><select id='product' onchange='filterMarkers(this.value);'><option value=''>Please select category</option><option value='Baked goods'>Baked goods</option><option value='Crafts and/or woodworking items'>Crafts and/or woodworking items</option><option value='Eggs'>Eggs</option></select>");
     }
 };
 
@@ -176,23 +177,6 @@ function recentSearches(search) {
     console.log(recentSearchesList);
 }
 
-
-function filterMarkers (category) {
-    //Not implemented yet
-    for (i = 0; i < markers.length; i++) {
-        marker = markers[i];
-        // If is same category or category not picked
-        if (marker.category == category || category.length === 0) {
-            marker.setVisible(true);
-        }
-        // Categories don't match 
-        else {
-            marker.setVisible(false);
-        }
-    }
-}
-
-
 $(document).ready(function ($) {
     //Shows the result, filter and recent search tabs in the UI. 
         $('#tabs').tab();
@@ -214,7 +198,7 @@ function removeSideBar(){
 
 function placeMarkers(lat, lng, markers, fmList) {
     //Places the markers on the map
-    console.log(fmList);
+    // console.log(fmList);
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < fmList.length; i++) {
         var market = fmList[i];
@@ -235,11 +219,12 @@ function placeMarkers(lat, lng, markers, fmList) {
                             '<dl class="dl-horizontal"><dt>Address</dt><dd>' + market['Address'] + '</dd>' +
                             '<dt>Products</dt><dd>' + market['Products'] + '</dd>' +
                             '<dt>Schedule</dt><dd>' + market['Schedule'] + '</dd></dl>'
-        var marker = new google.maps.Marker({
+        marker = new google.maps.Marker({
             position: marketLatLng,
             map: map,
             title: market['marketname'],
-            content: contentString
+            content: contentString,
+            products: market['Products']
         });
 
 
@@ -261,10 +246,32 @@ function placeMarkers(lat, lng, markers, fmList) {
 
     map.fitBounds(bounds);
     map.setCenter(bounds.getCenter());
-    
-    return markers;
 
 }
+
+
+function filterMarkers () {
+    var selectedProduct = document.getElementById("product").value;
+
+    console.log(marker.products + ' FILTER');
+    console.log(selectedProduct);
+
+    for (i = 0; i < markers.length; i++) {
+         marker = markers[i];
+        // If is same selectedProduct or selectedProduct not picked
+        if (marker.products.includes(selectedProduct) || selectedProduct.length === 0) {
+            marker.setVisible(true);
+        }
+        // Categories don't match 
+        else {
+            marker.setVisible(false);
+        }
+    }
+
+    
+}
+
+
 
 function getFarmersMarkets(lat,lng) {
     //Get list of farmers market from the USDA API.

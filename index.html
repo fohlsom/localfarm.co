@@ -30,49 +30,19 @@
                             <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Farmers Markets</a>
                         </li>
                         <li role="presentation">
-                            <a href="#filters" data-toggle="tab">
-                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Filters</a>
-                        </li>
-                        <li role="presentation">
                             <a href="#recentsearches" data-toggle="tab">
                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Recent searches</a>
                         </li>
                     </ul>
                     <div id="my-tab-content" class="tab-content">
                         <div class="tab-pane active" id="results">
-                            <h4 id="marker_list_header">Try searching for markets either by city or zip code.</h4>  
+                            <h4 id="marker_list_header">Try searching for markets either by city or zip code.</h4>
+                            <div id="product_filter"></div>
                             <ul id="marker_list" class="list-group"></ul>
-                        </div>
-                        <div class="tab-pane" id="filters">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="bread" value="bread" checked> Bread
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="Egg" checked> Egg
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="Bananas" checked> Platano
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value=""> Queso
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value=""> Milk
-                                </label>
-                            </div>
                         </div>
                         <div class="tab-pane" id="recentsearches">
                             <h4 id="recent_searches_list_header">Your recent searches.</h4>  
-                            <ul id="recent_searches_list"></ul>
+                            <ul id="recent_searches_list" class="list-unstyled"></ul>
                         </div>
                     </div>
                 </div>
