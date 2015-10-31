@@ -66,7 +66,7 @@ function initialize() {
         
         removeSideBar();
 
-        resetInputField()
+        resetInputField();
         
         google.maps.event.addListener(map, "click", function(){
             infowindow.close();
